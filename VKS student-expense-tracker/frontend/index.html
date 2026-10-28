@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Expense Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fa-solid fa-wallet"></i>
+                <span>SpendWise</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#dashboard" class="active">Dashboard</a>
+                <a href="#expenses">Expenses</a>
+                <a href="#analytics">Analytics</a>
+            </nav>
+            <div class="nav-user">
+                <span id="user-display">Student Mode</span>
+                <i class="fa-solid fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1>Track Every Penny, Ace Your Budget!</h1>
+                <p>Designed specifically for college students and beginners to manage pocket money, textbooks, dorm supplies, and campus life with ease.</p>
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <h3 id="total-spent">$0.00</h3>
+                        <p>Total Spent</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="monthly-budget">$500.00</h3>
+                        <p>Monthly Budget</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="remaining-budget">$500.00</h3>
+                        <p>Remaining</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container main-container">
+        <!-- Add Expense & Filters Row -->
+        <section class="action-section">
+            <div class="card form-card">
+                <h2><i class="fa-solid fa-plus-circle"></i> Add New Expense</h2>
+                <form id="expense-form">
+                    <div class="form-group">
+                        <label for="title">Expense Title</label>
+                        <input type="text" id="title" required placeholder="e.g., Textbook, Coffee, Dorm Rent">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="amount">Amount ($)</label>
+                            <input type="number" id="amount" step="0.01" required placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <select id="category" required>
+                                <option value="Food & Dining">Food & Dining</option>
+                                <option value="Books & Supplies">Books & Supplies</option>
+                                <option value="Rent & Housing">Rent & Housing</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Transport">Transport</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="submit-btn">
+                        <span class="btn-text">Add Expense</span>
+                        <div class="spinner hidden"></div>
+                    </button>
+                    <div id="form-message" class="form-message hidden"></div>
+                </form>
+            </div>
+
+            <!-- Filter & Controls Card -->
+            <div class="card filter-card">
+                <h2><i class="fa-solid fa-filter"></i> Filter & Search</h2>
+                <div class="form-group">
+                    <label for="search-input">Search Expenses</label>
+                    <input type="text" id="search-input" placeholder="Search by title...">
+                </div>
+                <div class="form-group">
+                    <label for="filter-category">Filter by Category</label>
+                    <select id="filter-category">
+                        <option value="All">All Categories</option>
+                        <option value="Food & Dining">Food & Dining</option>
+                        <option value="Books & Supplies">Books & Supplies</option>
+                        <option value="Rent & Housing">Rent & Housing</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="budget-setting">
+                    <label for="budget-input">Set Monthly Budget ($)</label>
+                    <div class="input-group">
+                        <input type="number" id="budget-input" value="500">
+                        <button id="update-budget" class="btn btn-secondary">Update</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Expenses List Section -->
+        <section class="expenses-section card">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-list"></i> Recent Expenses</h2>
+                <span id="expense-count" class="badge">0 items</span>
+            </div>
+            <div class="table-responsive">
+                <table id="expenses-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expenses-tbody">
+                        <!-- Dynamic rows injected here -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="empty-state" class="empty-state hidden">
+                <i class="fa-solid fa-receipt"></i>
+                <p>No expenses found. Start by adding your first expense above!</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 SpendWise Student Expense Tracker. Built for College Students.</p>
+        </div>
+    </footer>
+
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="modal hidden">
+        <div class="modal-content card">
+            <span class="close-modal">&times;</span>
+            <h2>Edit Expense</h2>
+            <form id="edit-form">
+                <input type="hidden" id="edit-id">
+                <div class="form-group">
+                    <label for="edit-title">Expense Title</label>
+                    <input type="text" id="edit-title" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-amount">Amount ($)</label>
+                        <input type="number" id="edit-amount" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-category">Category</label>
+                        <select id="edit-category" required>
+                            <option value="Food & Dining">Food & Dining</option>
+                            <option value="Books & Supplies">Books & Supplies</option>
+                            <option value="Rent & Housing">Rent & Housing</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="edit-date">Date</label>
+                    <input type="date" id="edit-date" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
